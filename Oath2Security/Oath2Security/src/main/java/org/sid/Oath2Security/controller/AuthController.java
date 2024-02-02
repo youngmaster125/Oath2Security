@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin("*")
 public class AuthController {
 	 private JwtEncoder jwtEncoder;
 	    private JwtDecoder jwtDecoder;
@@ -86,7 +88,7 @@ public class AuthController {
 	        JwtClaimsSet jwtClaimsSet=JwtClaimsSet.builder()
 	                .subject(subject)
 	                .issuedAt(instant)
-	                .expiresAt(instant.plus(withRefreshToken?1:5, ChronoUnit.MINUTES))
+	                .expiresAt(instant.plus(withRefreshToken?60:120, ChronoUnit.MINUTES))
 	                .issuer("security-service")
 	                .claim("scope",scope)
 	                .build();
@@ -96,7 +98,7 @@ public class AuthController {
 	            JwtClaimsSet jwtClaimsSetRefresh=JwtClaimsSet.builder()
 	                    .subject(subject)
 	                    .issuedAt(instant)
-	                    .expiresAt(instant.plus(5, ChronoUnit.MINUTES))
+	                    .expiresAt(instant.plus(60, ChronoUnit.MINUTES))
 	                    .issuer("security-service")
 	                    .build();
 	            String jwtRefreshToken=jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSetRefresh)).getTokenValue();

@@ -77,8 +77,10 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf->csrf.disable())
+                .cors(Customizer.withDefaults())
               // .authorizeRequests(auth->auth.requestMatchers("/token/**").permitAll())
-               .authorizeHttpRequests(auth->auth.requestMatchers("/token/**").permitAll())
+               .authorizeHttpRequests(auth->auth.requestMatchers("/token/**","/verify","/new_user/**","/sentOtp/**","/verifyOtp/**"
+            	        ,"/resetPassword/**").permitAll())
 
                .authorizeHttpRequests(auth->auth.anyRequest().authenticated())
                 .sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
